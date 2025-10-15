@@ -1,0 +1,14 @@
+/Users/apple/dev/xlms/xlms/contracts/payment_contract/target/release/deps/serde-32387b0c997377e2.d: /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/apple/dev/xlms/xlms/contracts/payment_contract/target/release/build/serde-f99d0c369ec7edfc/out/private.rs
+
+/Users/apple/dev/xlms/xlms/contracts/payment_contract/target/release/deps/libserde-32387b0c997377e2.rlib: /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/apple/dev/xlms/xlms/contracts/payment_contract/target/release/build/serde-f99d0c369ec7edfc/out/private.rs
+
+/Users/apple/dev/xlms/xlms/contracts/payment_contract/target/release/deps/libserde-32387b0c997377e2.rmeta: /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/apple/dev/xlms/xlms/contracts/payment_contract/target/release/build/serde-f99d0c369ec7edfc/out/private.rs
+
+/Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/Users/apple/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/Users/apple/dev/xlms/xlms/contracts/payment_contract/target/release/build/serde-f99d0c369ec7edfc/out/private.rs:
+
+# env-dep:OUT_DIR=/Users/apple/dev/xlms/xlms/contracts/payment_contract/target/release/build/serde-f99d0c369ec7edfc/out
