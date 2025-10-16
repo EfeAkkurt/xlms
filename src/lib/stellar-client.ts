@@ -15,7 +15,8 @@ import StellarSdk, {
   MemoValue,
   Operation,
   Asset,
-  StrKey
+  StrKey,
+  Horizon
 } from '@stellar/stellar-sdk';
 
 // Base fee in stroops (100 stroops = 0.00001 XLM)
@@ -43,11 +44,14 @@ export {
 
 export type { MemoValue };
 
-// Initialize RPC server for client-side use
-export const server = new rpc.Server('https://horizon-testnet.stellar.org');
+// Initialize Horizon server for account operations
+export const horizonServer = new Horizon.Server('https://horizon-testnet.stellar.org');
+
+// Initialize RPC server for Soroban operations
+export const rpcServer = new rpc.Server('https://soroban-testnet.stellar.org');
 
 // Helper function to load account (client-side only)
 export const loadAccount = async (publicKey: string) => {
-  return await server.getAccount(publicKey);
+  return await horizonServer.loadAccount(publicKey);
 };
 

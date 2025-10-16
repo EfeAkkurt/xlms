@@ -156,6 +156,13 @@ export async function getFreighterNetwork() {
 
 export type FreighterNetwork = "PUBLIC" | "TESTNET" | "FUTURENET" | "SANDBOX";
 
+const NETWORK_PASSPHRASES: Record<FreighterNetwork, string> = {
+  PUBLIC: "Public Global Stellar Network ; September 2015",
+  TESTNET: "Test SDF Network ; September 2015",
+  FUTURENET: "Test SDF Future Network ; October 2022",
+  SANDBOX: "Local Sandbox Stellar Network ; September 2022",
+};
+
 export async function signTx(envelopeXdr: string, network?: FreighterNetwork): Promise<string> {
   const txId = txLogger.startTransaction(SCOPE, 'Sign Transaction', {
     network,
@@ -174,16 +181,32 @@ export async function signTx(envelopeXdr: string, network?: FreighterNetwork): P
 
   try {
     let net = network;
-    if (!net) {
+    let passphrase: string | undefined;
+
+    if (net) {
+      passphrase = NETWORK_PASSPHRASES[net];
+    }
+
+    if (!passphrase) {
       txLogger.progress(SCOPE, 'Sign Transaction', txId, 'Fetching network details');
       const details = await getFreighterNetwork();
       net = (details.network ?? "TESTNET") as FreighterNetwork;
+      passphrase = details.networkPassphrase || NETWORK_PASSPHRASES[net];
     }
 
-    logger.info(SCOPE, "Signing transaction", { network: net });
+    if (!passphrase) {
+      throw new Error('Unable to determine network passphrase');
+    }
+
+    logger.info(SCOPE, "Signing transaction", { network: net, passphrase });
     txLogger.progress(SCOPE, 'Sign Transaction', txId, 'Waiting for user signature');
 
-    const signedResult = await freighterSignTransaction(envelopeXdr, { networkPassphrase: net });
+    const signedResult = await freighterSignTransaction(envelopeXdr, { networkPassphrase: passphrase });
+
+    if ((signedResult as { error?: { message?: string } }).error) {
+      const errorMessage = (signedResult as { error?: { message?: string } }).error?.message || 'Transaction signing failed';
+      throw new Error(errorMessage);
+    }
 
     if (!signedResult) {
       throw new Error('Transaction signing was cancelled by user');

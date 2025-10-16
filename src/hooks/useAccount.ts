@@ -45,18 +45,10 @@ const addressToHistoricObject = async (addr: string): Promise<AccountInfo> => {
   accountObject.address = addr;
   accountObject.displayName = `${addr.slice(0, 4)}...${addr.slice(-4)}`;
 
-  // Get network information
-  try {
-    const networkDetails = await getFreighterNetwork();
-    accountObject.network = networkDetails.network || 'UNKNOWN';
-    accountObject.networkPassphrase = networkDetails.networkPassphrase || '';
-    accountObject.isTestnet = networkDetails.network !== 'PUBLIC';
-  } catch (error) {
-    logger.warn('useAccount', 'Failed to get network details', error);
-    accountObject.network = 'UNKNOWN';
-    accountObject.networkPassphrase = '';
-    accountObject.isTestnet = true;
-  }
+  // Set default network information without making network calls
+  accountObject.network = 'UNKNOWN';
+  accountObject.networkPassphrase = '';
+  accountObject.isTestnet = true;
 
   return { ...accountObject };
 };
@@ -156,48 +148,13 @@ export function useAccount(): UseAccountReturn {
     checkConnection();
   }, [mounted, reduxConnected, publicKey, dispatch]);
 
-  // Setup wallet watcher
+  // Skip wallet watcher to prevent network errors
   useEffect(() => {
     if (!mounted || !account) return;
 
-    const setupWatcher = async () => {
-      try {
-        if (walletWatcher) {
-          walletWatcher.stop();
-        }
-
-        walletWatcher = createWalletWatcher(2000);
-
-        walletWatcher.watch(async (results) => {
-          logger.info('useAccount', 'Wallet changed', {
-            oldAddress: account.address,
-            newAddress: results.address,
-            network: results.network
-          });
-
-          // If address changed, update Redux store
-          if (results.address && results.address !== account.address) {
-            dispatch(connectWallet(results.address));
-
-            // Fetch new balance
-            try {
-              await dispatch(fetchBalance(results.address)).unwrap();
-            } catch (balanceError) {
-              logger.warn('useAccount', 'Could not fetch new balance', balanceError);
-            }
-          }
-
-          // Update account info
-          const newAccountInfo = await addressToHistoricObject(results.address);
-          setAccount(newAccountInfo);
-        });
-      } catch (error) {
-        logger.error('useAccount', 'Failed to setup wallet watcher', error);
-      }
-    };
-
-    setupWatcher();
-  }, [mounted, account, dispatch]);
+    // Wallet watcher disabled to prevent continuous network calls
+    // and errors. Basic functionality works without it.
+  }, [mounted, account]);
 
   const connect = async () => {
     setIsLoading(true);

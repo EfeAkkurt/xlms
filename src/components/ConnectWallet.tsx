@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { isConnected as checkIsConnected, setAllowed, requestAccess } from '@stellar/freighter-api';
 import { logger } from '@/lib/logger';
+import { RootState } from '@/store';
+import { connectWallet, disconnectWallet, setError } from '@/store/walletSlice';
 
 export default function ConnectWallet() {
-  const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [publicKey, setPublicKey] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const { publicKey, error } = useSelector((state: RootState) => state.wallet);
 
   useEffect(() => {
     checkConnection();
@@ -17,12 +19,11 @@ export default function ConnectWallet() {
   const checkConnection = async () => {
     try {
       const connected = await checkIsConnected();
-      setIsConnected(connected.isConnected);
 
       if (connected.isConnected) {
         const accessResponse = await requestAccess();
         if (accessResponse.address) {
-          setPublicKey(accessResponse.address);
+          dispatch(connectWallet(accessResponse.address));
         }
       }
     } catch (err) {
@@ -30,10 +31,10 @@ export default function ConnectWallet() {
     }
   };
 
-  
+
   const handleSetAllowed = async () => {
     setIsLoading(true);
-    setError(null);
+    dispatch(setError(null));
 
     try {
       const result = await setAllowed();
@@ -41,27 +42,43 @@ export default function ConnectWallet() {
       if (result.isAllowed) {
         await checkConnection();
       } else {
-        setError('Permission denied. Please allow access to your Freighter wallet.');
+        dispatch(setError('Permission denied. Please allow access to your Freighter wallet.'));
       }
     } catch (err: unknown) {
       const error = err as Error;
       logger.error('ConnectWallet', 'Permission request failed', error);
-      setError(error.message);
+      dispatch(setError(error.message));
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleDisconnect = () => {
+    dispatch(disconnectWallet());
+  };
+
   return (
     <div className="flex flex-col items-center max-w-xs">
       {publicKey && (
-        <div className="text-sm text-green-400 bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20 w-full mb-4">
-          <div className="flex items-center justify-center gap-2">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <span>Connected: {publicKey.slice(0, 4)}...{publicKey.slice(-4)}</span>
+        <div className="w-full space-y-3">
+          <div className="text-sm text-green-400 bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
+            <div className="flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span>Connected: {publicKey.slice(0, 4)}...{publicKey.slice(-4)}</span>
+            </div>
           </div>
+
+          <button
+            onClick={handleDisconnect}
+            className="w-full py-2 px-4 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors duration-200 flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span>Disconnect</span>
+          </button>
         </div>
       )}
 

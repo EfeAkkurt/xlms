@@ -1,12 +1,9 @@
 'use client';
 
 import ConnectWallet from '@/components/ConnectWallet';
-import MessageSigning from '@/components/MessageSigning';
-import TokenManager from '@/components/TokenManager';
-import BalanceCard from '@/components/BalanceCard';
-import TransactionForm from '@/components/TransactionForm';
-import RecentTransactions from '@/components/RecentTransactions';
 import NetworkStatus from '@/components/NetworkStatus';
+import Transfer from '@/components/Transfer';
+import TransactionHistory from '@/components/TransactionHistory';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 
@@ -134,26 +131,23 @@ export default function Home() {
             {/* Account Overview */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
-                <BalanceCard />
+                <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-white mb-2">Account Address</h3>
+                  <p className="text-sm text-gray-400 break-all font-mono">{publicKey}</p>
+                </div>
               </div>
               <div className="space-y-6">
                 <NetworkStatus />
-                <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
-                  <h3 className="text-sm font-medium text-gray-400 mb-2">Account Address</h3>
-                  <p className="text-xs text-gray-500 break-all font-mono">{publicKey}</p>
-                </div>
               </div>
             </div>
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <TransactionForm />
-                <MessageSigning />
+              <div>
+                <Transfer />
               </div>
-              <div className="space-y-6">
-                <TokenManager />
-                <RecentTransactions />
+              <div>
+                <TransactionHistory />
               </div>
             </div>
           </div>
